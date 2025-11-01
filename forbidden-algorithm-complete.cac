@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Forbidden Algorithm - Exclusive Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&family=Courier+New&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Layer System */
+        .layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s ease-in-out;
+            z-index: 1;
+        }
+
+        .layer.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        /* Background System */
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .mysterious-figure {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+            filter: blur(1px);
+        }
+
+        .mysterious-figure::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 68, 68, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+            animation: mysteriousMove 20s ease-in-out infinite;
+        }
+
+        @keyframes mysteriousMove {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            75% { transform: rotate(270deg) scale(1.1); }
+        }
+
+        /* Particle System */
+        .particle-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle-system::before,
+        .particle-system::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 10px #00ffff,
+                0 0 20px #00ffff,
+                0 0 30px #00ffff;
+            animation: particleFloat 8s linear infinite;
+        }
+
+        .particle-system::before {
+            top: 10%;
+            left: 20%;
+            animation-delay: -2s;
+        }
+
+        .particle-system::after {
+            top: 70%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+
+        /* Matrix Rain Effect */
+        .matrix-rain {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .matrix-rain::before {
+            content: "010011010111001001100001011011000110100101110100011110010010000001100001011011100110010000100000011001000110000101110100011000010";
+            position: absolute;
+            top: -100%;
+            left: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #00ff00;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            animation: matrixFall 15s linear infinite;
+        }
+
+        @keyframes matrixFall {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* Header Styles */
+        .main-header {
+            position: relative;
+            z-index: 20;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            color: #00ffff;
+        }
+
+        .logo-symbol {
+            font-size: 2rem;
+            text-shadow: 0 0 20px #00ffff;
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px #00ffff;
+        }
+
+        @keyframes logoGlow {
+            0% { text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff; }
+            100% { text-shadow: 0 0 30px #00ffff, 0 0 40px #00ffff, 0 0 50px #00ffff; }
+        }
+
+        /* Welcome Container */
+        .welcome-container {
+            position: relative;
+            z-index: 20;
+            text-align: center;
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 10vh;
+        }
+
+        .glowing-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-shadow: 
+                0 0 20px #ffffff,
+                0 0 40px #00ffff,
+                0 0 60px #00ffff;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        .red-glow {
+            color: #ff4444;
+            text-shadow: 
+                0 0 20px #ff4444,
+                0 0 40px #ff4444,
+                0 0 60px #ff4444;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Typewriter Effect */
+        .typewriter {
+            display: inline-block;
+            font-size: 1.2rem;
+            color: #cccccc;
+            border-right: 2px solid #00ffff;
+            animation: blink 1.5s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { border-color: #00ffff; }
+            51%, 100% { border-color: transparent; }
+        }
+
+        .small-text {
+            font-size: 1rem;
+            color: #888888;
+            opacity: 0;
+            animation: fadeInDelayed 2s ease-in-out 3s forwards;
+        }
+
+        @keyframes fadeInDelayed {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Warning Text */
+        .warning-text {
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(255, 68, 68, 0.1);
+            border: 2px solid #ff4444;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            color: #ff4444;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.3);
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 68, 68, 0.3); }
+            50% { transform: scale(1.02); box-shadow: 0 0 50px rgba(255, 68, 68, 0.5); }
+        }
+
+        /* Button Styles */
+        .enter-btn {
+            position: relative;
+            background: linear-gradient(45deg, #00ffff, #0088cc);
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #000000;
+            border-radius: 10px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 30px;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+        }
+
+        .btn-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: btnShine 3s ease-in-out infinite;
+        }
+
+        @keyframes btnShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            100% { transform: translateX(200%) translateY(200%) rotate(45deg); }
+        }
+
+        .arrow {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .enter-btn:hover .arrow {
+            transform: translateX(5px);
+        }
+
+        /* Layer 2 - Product Overview Styles */
+        .product-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 50px 20px;
+            position: relative;
+            z-index: 20;
+        }
+
+        .product-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            max-width: 1200px;
+            align-items: center;
+        }
+
+        .book-container {
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .book-3d {
+            width: 300px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: bookFloat 6s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes bookFloat {
+            0%, 100% { transform: rotateY(15deg) rotateX(5deg) translateY(0px); }
+            50% { transform: rotateY(-15deg) rotateX(-5deg) translateY(-20px); }
+        }
+
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f0f 100%);
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            border: 2px solid #00ffff;
+        }
+
+        .book-cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://i.ibb.co/j3zKz5P/book-cover.png') center/cover;
+            opacity: 0.8;
+        }
+
+        .book-title-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 30px 20px 20px;
+            text-align: center;
+        }
+
+        .book-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 20px #00ffff;
+            margin-bottom: 10px;
+        }
+
+        .book-subtitle {
+            font-size: 0.9rem;
+            color: #cccccc;
+            opacity: 0.8;
+        }
+
+        .product-info {
+            animation: slideInRight 1s ease-out 0.5s both;
+        }
+
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .product-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px #ffffff;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #00ffff;
+            transform: translateX(-30px);
+            opacity: 0;
+            animation: slideInFeature 0.6s ease-out forwards;
+        }
+
+        .feature-item:nth-child(1) { animation-delay: 0.2s; }
+        .feature-item:nth-child(2) { animation-delay: 0.4s; }
+        .feature-item:nth-child(3) { animation-delay: 0.6s; }
+        .feature-item:nth-child(4) { animation-delay: 0.8s; }
+        .feature-item:nth-child(5) { animation-delay: 1.0s; }
+
+        @keyframes slideInFeature {
+            0% { opacity: 0; transform: translateX(-30px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: #00ffff;
+        }
+
+        .feature-text {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        /* Layer 3 - Tips Styles */
+        .tips-container {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .tips-title {
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 50px;
+            text-shadow: 0 0 30px #ffffff;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 68, 68, 0.05) 100%);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(50px);
+            opacity: 0;
+            animation: tipCardReveal 0.8s ease-out forwards;
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:nth-child(1) { animation-delay: 0.2s; }
+        .tip-card:nth-child(2) { animation-delay: 0.4s; }
+        .tip-card:nth-child(3) { animation-delay: 0.6s; }
+        .tip-card:nth-child(4) { animation-delay: 0.8s; }
+        .tip-card:nth-child(5) { animation-delay: 1.0s; }
+        .tip-card:nth-child(6) { animation-delay: 1.2s; }
+
+        @keyframes tipCardReveal {
+            0% { opacity: 0; transform: translateY(50px) rotateX(15deg); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0deg); }
+        }
+
+        .tip-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.3);
+            border-color: #00ffff;
+        }
+
+        .tip-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ffff, #ff4444, #ffd700, #00ffff);
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tip-card:hover::before {
+            opacity: 0.5;
+        }
+
+        .tip-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #00ffff;
+            color: #000000;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .tip-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .tip-description {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        .final-warning {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 68, 68, 0.1);
+            border: 2px solid #ff4444;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(255, 68, 68, 0.3);
+        }
+
+        .final-warning h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff4444;
+        }
+
+        .final-warning p {
+            font-size: 1.1rem;
+            color: #cccccc;
+            margin-bottom: 30px;
+        }
+
+        /* Layer 4 - Purchase Styles */
+        .purchase-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 50px 20px;
+            position: relative;
+            z-index: 20;
+        }
+
+        .exclusive-banner {
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            color: #000000;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            animation: bannerPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes bannerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .purchase-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #ffffff;
+            text-shadow: 0 0 30px #ffffff;
+        }
+
+        .urgency-section {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .countdown-timer, .stock-counter {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 68, 68, 0.1);
+            border: 2px solid #ff4444;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 68, 68, 0.3);
+        }
+
+        .countdown-timer h4, .stock-counter h4 {
+            color: #ff4444;
+            margin-bottom: 10px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .timer-display, .stock-display {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+        }
+
+        .pricing-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .original-price {
+            font-size: 1.5rem;
+            color: #888888;
+            text-decoration: line-through;
+            margin-bottom: 10px;
+        }
+
+        .current-price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 30px #ffd700;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .price-note {
+            color: #cccccc;
+            font-size: 0.9rem;
+        }
+
+        .purchase-btn {
+            background: linear-gradient(45deg, #ff4444, #cc0000);
+            border: none;
+            padding: 25px 50px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #ffffff;
+            border-radius: 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 68, 68, 0.4);
+            animation: purchasePulse 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes purchasePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .purchase-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(255, 68, 68, 0.6);
+        }
+
+        .purchase-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .purchase-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: #00ffff;
+            box-shadow: 0 0 20px #00ffff;
+            transform: scale(1.2);
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 255, 255, 0.2);
+            border: 2px solid #00ffff;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            font-size: 1.5rem;
+            color: #00ffff;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(0, 255, 255, 0.4);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        .nav-arrow.left {
+            left: 30px;
+        }
+
+        .nav-arrow.right {
+            right: 30px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-showcase {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .book-3d {
+                width: 250px;
+                height: 350px;
+            }
+
+            .product-title, .purchase-title {
+                font-size: 2rem;
+            }
+
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .urgency-section {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-arrow {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .nav-arrow.left {
+                left: 15px;
+            }
+
+            .nav-arrow.right {
+                right: 15px;
+            }
+
+            .glowing-title {
+                font-size: 2.5rem;
+            }
+
+            .enter-btn, .purchase-btn {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-container, .tips-container, .purchase-container {
+                padding: 30px 15px;
+            }
+
+            .tip-card {
+                padding: 20px;
+            }
+
+            .book-3d {
+                width: 200px;
+                height: 280px;
+            }
+
+            .current-price {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Additional animations and effects */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .glow-on-hover {
+            transition: all 0.3s ease;
+        }
+
+        .glow-on-hover:hover {
+            text-shadow: 0 0 20px currentColor;
+            transform: scale(1.02);
+        }
+
+        /* Special effects for enhanced visual appeal */
+        .sparkle::before {
+            content: '✨';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            animation: sparkleRotate 3s linear infinite;
+        }
+
+        @keyframes sparkleRotate {
+            0% { transform: rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Layer 1: Welcome Page -->
+    <section id="layer1" class="layer active">
+        <div class="background-container">
+            <div class="mysterious-figure"></div>
+            <div class="particle-system"></div>
+            <div class="matrix-rain"></div>
+        </div>
+        
+        <header class="main-header">
+            <div class="logo">
+                <span class="logo-symbol">⧨</span>
+                <span class="logo-text">FORBIDDEN ALGO</span>
+            </div>
+        </header>
+        
+        <div class="welcome-container">
+            <h1 class="glowing-title">
+                WELCOME TO THE 
+                <span class="red-glow">FORBIDDEN</span>
+                KNOWLEDGE
+            </h1>
+            
+            <div class="subtitle">
+                <span class="typewriter" data-text="Some secrets were never meant to be shared..."></span>
+                <br>
+                <span class="small-text fade-in-delayed">Until now.</span>
+            </div>
+            
+            <div class="warning-text pulse">
+                ⚠️ WARNING: This knowledge will change everything you know about AI and money
+            </div>
+            
+            <button class="enter-btn" onclick="nextLayer()">
+                <span class="btn-text">ENTER IF YOU DARE</span>
+                <span class="arrow">→</span>
+                <div class="btn-glow"></div>
+            </button>
+        </div>
+    </section>
+
+    <!-- Layer 2: Product Overview -->
+    <section id="layer2" class="layer">
+        <div class="background-container">
+            <div class="mysterious-figure"></div>
+            <div class="particle-system"></div>
+        </div>
+        
+        <div class="product-container">
+            <div class="product-showcase">
+                <div class="book-container">
+                    <div class="book-3d">
+                        <div class="book-cover">
+                            <div class="book-title-overlay">
+                                <div class="book-title">THE FORBIDDEN ALGORITHM</div>
+                                <div class="book-subtitle">AI Money Machines</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <h2 class="product-title">THE FORBIDDEN ALGORITHM</h2>
+                    <ul class="feature-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">🤖</span>
+                            <span class="feature-text">Advanced AI automation strategies</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">💰</span>
+                            <span class="feature-text">Proven money-making systems</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🔥</span>
+                            <span class="feature-text">Exclusive insider techniques</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">⚡</span>
+                            <span class="feature-text">Rapid implementation guides</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">🎯</span>
+                            <span class="feature-text">Step-by-step blueprints</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="enter-btn" onclick="nextLayer()">
+                        <span class="btn-text">DISCOVER THE SECRETS</span>
+                        <span class="arrow">→</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 3: Usage Tips -->
+    <section id="layer3" class="layer">
+        <div class="background-container">
+            <div class="mysterious-figure"></div>
+            <div class="particle-system"></div>
+        </div>
+        
+        <div class="tips-container">
+            <h2 class="tips-title">MASTER THE FORBIDDEN ARTS</h2>
+            
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <span class="tip-number">1</span>
+                    <h3 class="tip-title">Start Quietly</h3>
+                    <p class="tip-description">Begin implementing these strategies in stealth mode. The less attention you draw, the more effective they become.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <span class="tip-number">2</span>
+                    <h3 class="tip-title">Scale Gradually</h3>
+                    <p class="tip-description">Don't rush the process. Each technique builds upon the last. Master one before moving to the next level.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <span class="tip-number">3</span>
+                    <h3 class="tip-title">Automate Everything</h3>
+                    <p class="tip-description">The true power lies in automation. Set it up once, then let the AI work while you sleep.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <span class="tip-number">4</span>
+                    <h3 class="tip-title">Monitor Closely</h3>
+                    <p class="tip-description">Keep track of every metric. The data will reveal patterns that lead to exponential growth.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <span class="tip-number">5</span>
+                    <h3 class="tip-title">Stay Invisible</h3>
+                    <p class="tip-description">The most successful practitioners operate in shadows. Visibility brings competition and regulation.</p>
+                </div>
+                
+                <div class="tip-card">
+                    <span class="tip-number">6</span>
+                    <h3 class="tip-title">Never Stop Learning</h3>
+                    <p class="tip-description">AI evolves rapidly. Stay ahead of the curve by constantly upgrading your knowledge and techniques.</p>
+                </div>
+            </div>
+            
+            <div class="final-warning">
+                <h3>⚠️ FINAL WARNING ⚠️</h3>
+                <p>Once you learn these secrets, there's no going back. Your perspective on AI and money will be forever changed.</p>
+                
+                <button class="enter-btn" onclick="nextLayer()">
+                    <span class="btn-text">I'M READY TO CHANGE EVERYTHING</span>
+                    <span class="arrow">→</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Layer 4: Purchase -->
+    <section id="layer4" class="layer">
+        <div class="background-container">
+            <div class="mysterious-figure"></div>
+            <div class="particle-system"></div>
+        </div>
+        
+        <div class="purchase-container">
+            <div class="exclusive-banner sparkle">
+                🔥 EXCLUSIVE: First 100 Buyers Only 🔥
+            </div>
+            
+            <h2 class="purchase-title">GET INSTANT ACCESS</h2>
+            
+            <div class="urgency-section">
+                <div class="countdown-timer">
+                    <h4>⏰ Offer Expires In:</h4>
+                    <div class="timer-display" id="countdown">02:47:33</div>
+                </div>
+                
+                <div class="stock-counter">
+                    <h4>📦 Copies Remaining:</h4>
+                    <div class="stock-display" id="stock">13</div>
+                </div>
+            </div>
+            
+            <div class="pricing-section">
+                <div class="original-price">Regular Price: $59.99</div>
+                <div class="current-price">$23.99</div>
+                <div class="price-note">Limited Time Special Price</div>
+            </div>
+            
+            <button class="purchase-btn" onclick="window.open('https://aigrandmaster.gumroad.com/l/THEFORBIDDENALGORITHM_AIMONEYMACHINES', '_blank')">
+                GET INSTANT ACCESS NOW
+            </button>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <div class="nav-dot active" data-layer="1" onclick="goToLayer(1)"></div>
+        <div class="nav-dot" data-layer="2" onclick="goToLayer(2)"></div>
+        <div class="nav-dot" data-layer="3" onclick="goToLayer(3)"></div>
+        <div class="nav-dot" data-layer="4" onclick="goToLayer(4)"></div>
+    </div>
+
+    <div class="nav-arrow left" onclick="prevLayer()" id="prevArrow">‹</div>
+    <div class="nav-arrow right" onclick="nextLayer()" id="nextArrow">›</div>
+
+    <script>
+        let currentLayer = 1;
+        const totalLayers = 4;
+
+        // Initialize typewriter effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const typewriterElements = document.querySelectorAll('.typewriter');
+            typewriterElements.forEach(element => {
+                const text = element.getAttribute('data-text');
+                element.innerHTML = '';
+                typeWriter(element, text, 0);
+            });
+
+            // Initialize countdown timer
+            startCountdown();
+            
+            // Initialize stock counter animation
+            startStockCounter();
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault();
+                    nextLayer();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevLayer();
+                }
+            });
+
+            // Add touch/swipe support for mobile
+            let startX = 0;
+            let startY = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                if (!startX || !startY) return;
+                
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                
+                const diffX = startX - endX;
+                const diffY = startY - endY;
+                
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        nextLayer(); // Swipe left - go to next
+                    } else {
+                        prevLayer(); // Swipe right - go to previous
+                    }
+                }
+                
+                startX = 0;
+                startY = 0;
+            });
+        });
+
+        function typeWriter(element, text, i) {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                setTimeout(() => typeWriter(element, text, i + 1), 50);
+            }
+        }
+
+        function nextLayer() {
+            if (currentLayer < totalLayers) {
+                goToLayer(currentLayer + 1);
+            }
+        }
+
+        function prevLayer() {
+            if (currentLayer > 1) {
+                goToLayer(currentLayer - 1);
+            }
+        }
+
+        function goToLayer(layerNumber) {
+            // Remove active class from current layer
+            document.getElementById(`layer${currentLayer}`).classList.remove('active');
+            
+            // Remove active class from current nav dot
+            document.querySelector(`.nav-dot[data-layer="${currentLayer}"]`).classList.remove('active');
+            
+            // Update current layer
+            currentLayer = layerNumber;
+            
+            // Add active class to new layer
+            document.getElementById(`layer${currentLayer}`).classList.add('active');
+            
+            // Add active class to new nav dot
+            document.querySelector(`.nav-dot[data-layer="${currentLayer}"]`).classList.add('active');
+            
+            // Update navigation arrows visibility
+            updateNavArrows();
+            
+            // Trigger layer-specific animations
+            triggerLayerAnimations(currentLayer);
+        }
+
+        function updateNavArrows() {
+            const prevArrow = document.getElementById('prevArrow');
+            const nextArrow = document.getElementById('nextArrow');
+            
+            if (currentLayer === 1) {
+                prevArrow.style.opacity = '0.3';
+                prevArrow.style.pointerEvents = 'none';
+            } else {
+                prevArrow.style.opacity = '1';
+                prevArrow.style.pointerEvents = 'all';
+            }
+            
+            if (currentLayer === totalLayers) {
+                nextArrow.style.opacity = '0.3';
+                nextArrow.style.pointerEvents = 'none';
+            } else {
+                nextArrow.style.opacity = '1';
+                nextArrow.style.pointerEvents = 'all';
+            }
+        }
+
+        function triggerLayerAnimations(layer) {
+            // Reset and trigger animations for specific layers
+            if (layer === 2) {
+                const features = document.querySelectorAll('.feature-item');
+                features.forEach((feature, index) => {
+                    feature.style.animation = 'none';
+                    setTimeout(() => {
+                        feature.style.animation = `slideInFeature 0.6s ease-out ${index * 0.2}s forwards`;
+                    }, 50);
+                });
+            } else if (layer === 3) {
+                const tipCards = document.querySelectorAll('.tip-card');
+                tipCards.forEach((card, index) => {
+                    card.style.animation = 'none';
+                    setTimeout(() => {
+                        card.style.animation = `tipCardReveal 0.8s ease-out ${index * 0.2}s forwards`;
+                    }, 50);
+                });
+            }
+        }
+
+        function startCountdown() {
+            let timeLeft = 2 * 3600 + 47 * 60 + 33; // 2:47:33 in seconds
+            
+            function updateTimer() {
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+                
+                const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                const timerElement = document.getElementById('countdown');
+                if (timerElement) {
+                    timerElement.textContent = display;
+                }
+                
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    setTimeout(updateTimer, 1000);
+                } else {
+                    if (timerElement) {
+                        timerElement.textContent = "EXPIRED!";
+                        timerElement.style.color = "#ff4444";
+                    }
+                }
+            }
+            
+            updateTimer();
+        }
+
+        function startStockCounter() {
+            let stock = 13;
+            const stockElement = document.getElementById('stock');
+            
+            // Simulate occasional stock decreases
+            function updateStock() {
+                if (Math.random() < 0.1 && stock > 1) { // 10% chance every interval
+                    stock--;
+                    if (stockElement) {
+                        stockElement.textContent = stock;
+                        
+                        // Add flash effect
+                        stockElement.style.color = "#ff4444";
+                        setTimeout(() => {
+                            if (stockElement) {
+                                stockElement.style.color = "#ffffff";
+                            }
+                        }, 500);
+                    }
+                }
+                
+                // Check again in 30-60 seconds
+                setTimeout(updateStock, (30 + Math.random() * 30) * 1000);
+            }
+            
+            updateStock();
+        }
+
+        // Initialize navigation arrows visibility
+        updateNavArrows();
+
+        // Add particle creation
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.cssText = `
+                position: absolute;
+                width: 2px;
+                height: 2px;
+                background: #00ffff;
+                border-radius: 50%;
+                pointer-events: none;
+                left: ${Math.random() * 100}%;
+                top: 100%;
+                box-shadow: 0 0 10px #00ffff;
+                z-index: 1;
+            `;
+            
+            document.body.appendChild(particle);
+            
+            // Animate particle
+            particle.animate([
+                { transform: 'translateY(0px)', opacity: 0 },
+                { transform: 'translateY(-20px)', opacity: 1, offset: 0.1 },
+                { transform: 'translateY(-100vh)', opacity: 0 }
+            ], {
+                duration: 8000,
+                easing: 'linear'
+            }).onfinish = () => {
+                if (particle.parentNode) {
+                    particle.parentNode.removeChild(particle);
+                }
+            };
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 2000);
+
+        // Add matrix rain characters
+        function createMatrixRain() {
+            const chars = '01';
+            const container = document.querySelector('.matrix-rain');
+            if (!container) return;
+            
+            for (let i = 0; i < 5; i++) {
+                const column = document.createElement('div');
+                column.style.cssText = `
+                    position: absolute;
+                    top: -100vh;
+                    left: ${Math.random() * 100}%;
+                    font-family: 'Courier New', monospace;
+                    font-size: 12px;
+                    color: #00ff00;
+                    opacity: 0.3;
+                    pointer-events: none;
+                `;
+                
+                let text = '';
+                for (let j = 0; j < 50; j++) {
+                    text += chars[Math.floor(Math.random() * chars.length)] + '<br>';
+                }
+                column.innerHTML = text;
+                
+                container.appendChild(column);
+                
+                column.animate([
+                    { transform: 'translateY(0vh)' },
+                    { transform: 'translateY(200vh)' }
+                ], {
+                    duration: 15000,
+                    easing: 'linear'
+                }).onfinish = () => {
+                    if (column.parentNode) {
+                        column.parentNode.removeChild(column);
+                    }
+                };
+            }
+        }
+
+        // Create matrix rain periodically
+        setInterval(createMatrixRain, 3000);
+        createMatrixRain(); // Initial call
+
+        // Performance optimization: throttle animations on lower-end devices
+        const isLowEndDevice = navigator.hardwareConcurrency < 4 || navigator.deviceMemory < 4;
+        if (isLowEndDevice) {
+            document.documentElement.style.setProperty('--animation-duration', '1s');
+        }
+    </script>
+</body>
+</html>
